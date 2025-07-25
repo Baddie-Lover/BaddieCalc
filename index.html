@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BaddieCalc™</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Base styles - apply to all themes */
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      transition: all 0.3s ease; /* Smooth transitions for theme changes */
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Theme Variables */
+    /* Baddie Theme (Default) */
+    body.baddie-theme {
+      --bg-gradient-start: #cbb4d4;
+      --bg-gradient-end: #e0c3fc;
+      --primary-color: #9c4dff;
+      --secondary-color: #7d3cff;
+      --button-bg: rgba(255, 255, 255, 0.08);
+      --button-hover-bg: rgba(255, 255, 255, 0.2);
+      --operator-bg: #9b59b6;
+      --equal-bg: #8e44ad;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+      --display-bg: rgba(255, 255, 255, 0.1);
+      --chat-section-bg-start: rgba(255,255,255,0.1);
+      --chat-section-bg-end: rgba(156,77,255,0.12);
+      --chatbox-bg: rgba(255, 255, 255, 0.2);
+      --chat-input-bg: rgba(255, 255, 255, 0.4);
+      --chat-input-placeholder: rgba(156, 77, 255, 0.7);
+      --baddie-response-bg: rgba(255, 255, 255, 0.15);
+      --text-color: #fff;
+      --button-text-color: #fff;
+      --baddiebot-button-bg: #fff;
+      --baddiebot-button-color: #7d3cff;
+      --footer-color: rgba(156, 77, 255, 0.7);
+    }
+
+    /* Emo Theme */
+    body.emo-theme {
+      --bg-gradient-start: #2c3e50; /* Dark grey */
+      --bg-gradient-end: #4a69bd;   /* Muted blue */
+      --primary-color: #e74c3c;     /* Muted red */
+      --secondary-color: #c0392b;   /* Darker red */
+      --button-bg: rgba(0, 0, 0, 0.2);
+      --button-hover-bg: rgba(0, 0, 0, 0.4);
+      --operator-bg: #6c5ce7;       /* Dark purple */
+      --equal-bg: #8e44ad;
+      --glass-bg: rgba(0, 0, 0, 0.3);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+      --display-bg: rgba(0, 0, 0, 0.4);
+      --chat-section-bg-start: rgba(0,0,0,0.2);
+      --chat-section-bg-end: rgba(108,92,231,0.25);
+      --chatbox-bg: rgba(0, 0, 0, 0.4);
+      --chat-input-bg: rgba(0, 0, 0, 0.5);
+      --chat-input-placeholder: rgba(255, 255, 255, 0.6);
+      --baddie-response-bg: rgba(0, 0, 0, 0.3);
+      --text-color: #ecf0f1;        /* Light grey */
+      --button-text-color: #ecf0f1;
+      --baddiebot-button-bg: #34495e; /* Darker grey */
+      --baddiebot-button-color: #e74c3c;
+      --footer-color: rgba(236, 240, 241, 0.7);
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    }
+
+    .app-container {
+      display: flex;
+      gap: 30px;
+      position: relative;
+      width: auto;
+      height: auto;
+      align-items: center;
+    }
+
+    .calculator {
+      background: var(--glass-bg);
+      border-radius: 35px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: var(--glass-border);
+      padding: 30px;
+      width: 360px;
+      position: relative;
+    }
+
+    .title-top {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .display {
+      text-align: right;
+      padding: 25px 15px;
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      min-height: 70px;
+      word-wrap: break-word;
+      background: var(--display-bg);
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    button {
+      aspect-ratio: 1 / 1;
+      font-size: 1.6rem;
+      border: none;
+      border-radius: 20px;
+      background: var(--button-bg);
+      color: var(--button-text-color);
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+    }
+
+    button:hover {
+      background: var(--button-hover-bg);
+      transform: scale(1.06);
+    }
+
+    button.operator {
+      background-color: var(--operator-bg);
+    }
+
+    button.equal {
+      background-color: var(--equal-bg);
+      color: white;
+    }
+
+    button.zero {
+      grid-column: span 2;
+      border-radius: 40px;
+      text-align: left;
+      padding-left: 25px;
+      aspect-ratio: auto;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--primary-color);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      margin-top: 20px;
+      letter-spacing: 1px;
+      font-style: italic;
+    }
+
+    .baddiebot-button {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      background: var(--baddiebot-button-bg);
+      color: var(--baddiebot-button-color);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-style: italic;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      width: 320px;
+    }
+
+    .chat-section {
+      background: linear-gradient(135deg, var(--chat-section-bg-start), var(--chat-section-bg-end));
+      padding: 25px 20px;
+      border-radius: 30px;
+      box-shadow: 0 10px 40px rgba(156, 77, 255, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      margin-top: -77%;
+    }
+
+    .chatbox {
+      background: var(--chatbox-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 8px 8px 8px 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-color);
+      z-index: 100;
+      width: 100%;
+    }
+
+    .chatbox input {
+      flex-grow: 1;
+      flex-shrink: 1;
+      min-width: 0;
+      padding: 10px 18px;
+      border-radius: 25px;
+      border: none;
+      background: var(--chat-input-bg);
+      color: var(--primary-color);
+      font-size: 0.95rem;
+      font-weight: 500;
+      height: 38px;
+      outline: none;
+    }
+
+    .chatbox input::placeholder {
+      color: var(--chat-input-placeholder);
+    }
+
+    .chatbox button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-size: 18px;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .chatbox button:hover {
+      background-color: var(--secondary-color);
+      transform: scale(1.05);
+    }
+
+    .baddie-response {
+      padding: 20px;
+      border-radius: 25px;
+      background: var(--baddie-response-bg);
+      color: var(--primary-color);
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 500;
+      font-style: italic;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      min-height: 60px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      word-break: break-word;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      line-height: 1.4;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--footer-color);
+      font-style: italic;
+    }
+
+    .theme-switcher {
+      width: 220px;
+      justify-content: space-between;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .theme-switcher button {
+      flex: 1;
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+      min-height: 36px;
+    }
+
+    .theme-switcher button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .theme-switcher button.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="baddie-theme">
+  <div class="theme-switcher">
+    <button id="baddieThemeBtn" onclick="setTheme('baddie')">Baddie</button>
+    <button id="emoThemeBtn" onclick="setTheme('emo')">Emo</button>
+  </div>
+
+  <div class="app-container">
+    <div class="calculator">
+      <div class="baddiebot-button">BaddieBot</div>
+      <div class="title-top">BaddieCalc™</div>
+      <div id="display" class="display">0</div>
+      <div class="buttons">
+        <button onclick="clearDisplay()">Ac</button>
+        <button onclick="append('%')" class="operator">%</button>
+        <button onclick="append('/')" class="operator">/</button>
+        <button onclick="append('*')" class="operator">*</button>
+
+        <button onclick="append('7')">7</button>
+        <button onclick="append('8')">8</button>
+        <button onclick="append('9')">9</button>
+        <button onclick="append('-')" class="operator">-</button>
+
+        <button onclick="append('4')">4</button>
+        <button onclick="append('5')">5</button>
+        <button onclick="append('6')">6</button>
+        <button onclick="append('+')" class="operator">+</button>
+
+        <button onclick="append('1')">1</button>
+        <button onclick="append('2')">2</button>
+        <button onclick="append('3')">3</button>
+        <button onclick="calculate()" class="equal">=</button>
+
+        <button onclick="append('0')" class="zero">0</button>
+        <button onclick="append('.')">.</button>
+        <button onclick="append('00')">00</button>
+      </div>
+      <div class="title">only for baddies</div>
+    </div>
+
+    <div class="chat-container">
+      <div class="chat-section">
+        <div class="chatbox" id="chatbox">
+          <input id="baddie-input" type="text" placeholder="Ask anything" />
+          <button onclick="askBaddieBot()">↑</button>
+        </div>
+        <div id="baddie-response" class="baddie-response"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Mistakes possible, cuz its made by a mistake.</div>
+
+  <script>
+    const display = document.getElementById('display');
+    const responseBox = document.getElementById('baddie-response');
+    const body = document.body;
+    let easterEggActive = false;
+
+    function append(value) {
+      if (easterEggActive) return;
+      if (display.innerText === '0' && value !== '.') {
+        display.innerText = value;
+      } else {
+        display.innerText += value;
+      }
+      checkEasterEggs();
+    }
+
+    function clearDisplay() {
+      display.innerText = '0';
+      easterEggActive = false;
+      // Reset display styling
+      display.style.color = '';
+      display.style.fontSize = '';
+      display.style.fontWeight = '';
+    }
+
+    function calculate() {
+      if (easterEggActive) return;
+      try {
+        display.innerText = eval(display.innerText);
+      } catch {
+        display.innerText = 'Error';
+      }
+    }
+
+    // Easter Egg System
+    function checkEasterEggs() {
+      const currentDisplay = display.innerText.replace(/\D/g, ''); // Numbers only
+      
+      if (currentDisplay.includes("69")) {
+        triggerEasterEgg("I like you... and you know whom I'm talking about", "#ff6b9d");
+        return;
+      }
+      
+      if (currentDisplay.includes("420")) {
+        triggerEasterEgg("XO?", "#4CAF50");
+        return;
+      }
+      
+      if (currentDisplay.includes("80085")) {
+        triggerEasterEgg("Just Come kiss me and bite me", "#FF9800");
+        return;
+      }
+    }
+
+    function triggerEasterEgg(message, color) {
+      easterEggActive = true;
+      const originalDisplay = display.innerText;
+      
+      let flashCount = 0;
+      const flashInterval = setInterval(() => {
+        display.style.color = flashCount % 2 === 0 ? color : "white";
+        flashCount++;
+        
+        if (flashCount > 6) {
+          clearInterval(flashInterval);
+          display.innerText = message;
+          display.style.color = color;
+          display.style.fontSize = "1.8rem";
+          display.style.fontWeight = "700";
+          
+          setTimeout(() => {
+            display.innerText = originalDisplay;
+            display.style.color = '';
+            display.style.fontSize = '';
+            display.style.fontWeight = '';
+            easterEggActive = false;
+          }, 3000);
+        }
+      }, 200);
+    }
+
+    async function askBaddieBot() {
+      const inputField = document.getElementById('baddie-input');
+      const input = inputField.value.trim();
+      if (!input) return;
+
+      responseBox.style.display = 'flex';
+      responseBox.innerText = 'Thinking... 💭';
+
+      try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer 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"
+          },
+          body: JSON.stringify({
+            model: "openai/gpt-3.5-turbo",
+            messages: [
+              { role: "user", content: input }
+            ]
+          })
+        });
+
+        const data = await response.json();
+        const botMessage = data.choices?.[0]?.message?.content || "Oops, try again! 💔";
+        responseBox.innerText = botMessage;
+      } catch {
+        responseBox.innerText = "Network error! 💔";
+      }
+
+      inputField.value = '';
+    }
+
+    document.getElementById("baddie-input").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") askBaddieBot();
+    });
+
+    function setTheme(themeName) {
+      body.classList.remove('baddie-theme', 'emo-theme');
+      body.classList.add(`${themeName}-theme`);
+
+      document.querySelectorAll('.theme-switcher button').forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById(`${themeName}ThemeBtn`).classList.add('active');
+
+      localStorage.setItem('selectedTheme', themeName);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('selectedTheme') || 'baddie';
+      setTheme(savedTheme);
+    });
+  </script>
+</body>
+</html>
